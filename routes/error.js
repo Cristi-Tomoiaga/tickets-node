@@ -1,6 +1,8 @@
 import {ApplicationError} from "../services/applicationErrors.js";
 
 export default async (err, req, res, next) => {
+    console.error('Error Handler:', err);
+
     if (res.headersSent) {
         return next(err);
     }
