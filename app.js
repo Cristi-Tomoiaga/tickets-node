@@ -1,4 +1,5 @@
-import errorHandler from './routes/error';
+import events from './routes/events.js';
+import errorHandler from './routes/error.js';
 
 import 'dotenv/config';
 import express from 'express';
@@ -9,6 +10,7 @@ const port = process.env.EXPRESS_PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
+app.use('/api/events', events);
 app.use(errorHandler);
 
 app.listen(port, () => {
