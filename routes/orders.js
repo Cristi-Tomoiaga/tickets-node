@@ -13,16 +13,36 @@ router.get('/', async (req, res, next) => {
     }
 });
 
-router.post('/', async (req, res) => {
+router.post('/', async (req, res, next) => {
+    try {
+        const { eventId, ticketCategoryId, numberOfTickets } = req.body;
+        const order = await ordersService.createOrder(eventId, ticketCategoryId, numberOfTickets);
 
+        res.status(201).json(order);
+    } catch (err) {
+        next(err);
+    }
 });
 
-router.patch('/:id', async (req, res) => {
+router.patch('/:id', async (req, res, next) => {
+    try {
+        const { ticketCategoryId, numberOfTickets } = req.body;
+        const order = await ordersService.updateOrder(req.params.id, ticketCategoryId, numberOfTickets);
 
+        res.status(200).json(order);
+    } catch (err) {
+        next(err);
+    }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', async (req, res, next) => {
+    try {
+        await ordersService.deleteOrder(req.params.id);
 
+        res.status(204).end();
+    } catch (err) {
+        next(err);
+    }
 });
 
 export default router;
