@@ -12,11 +12,11 @@ export default async (err, req, res, next) => {
         const statusCode = err.status;
 
         return res.status(statusCode).json({
-            message,
+            errorMessage: message,
         });
     }
 
     res.status(500).json({
-        message: "Internal Server Error.",
+        errorMessage: "Internal Server Error.",
     });
 };
