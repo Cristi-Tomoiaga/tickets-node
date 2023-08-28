@@ -30,3 +30,18 @@ export const mapEvent = (event) => {
 export const mapEvents = (events) => {
   return events.map(mapEvent);
 };
+
+export const mapOrder = (order) => {
+    return {
+        id: order.id,
+        timestamp: order.orderedAt,
+        ticketCategory: mapTicketCategory(order.ticketCategory),
+        numberOfTickets: order.numberOfTickets,
+        totalPrice: new Prisma.Decimal(order.totalPrice).toNumber(),
+        event: mapEvent(order.ticketCategory.event),
+    };
+};
+
+export const mapOrders = (orders) => {
+    return orders.map(mapOrder);
+};
