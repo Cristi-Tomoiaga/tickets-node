@@ -2,12 +2,29 @@ import prisma from '../prisma/client.js';
 import {mapEvent, mapEvents} from "../prisma/utils.js";
 import {EntityNotFoundError} from "./applicationErrors.js";
 
-const getAllEvents = async (venueLocation, eventType) => {
+const getAllEvents = async (eventName, venueLocation, eventType) => {
+    const filters = {
+        name: eventName !== undefined ? {
+            contains: eventName.trim(),
+        } : undefined,
+        venue: venueLocation !== undefined ? {
+            location: {
+                contains: venueLocation.trim(),
+            },
+        } : undefined,
+        eventType: eventType !== undefined ? {
+            name: {
+                contains: eventType.trim(),
+            },
+        } : undefined,
+    };
+
     const events = await prisma.event.findMany({
         where: {
             availableSeats: {
                 gt: 0,
             },
+            ...filters,
         },
         include: {
             ticketCategories: true,

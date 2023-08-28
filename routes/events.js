@@ -5,7 +5,8 @@ const router = express.Router();
 
 router.get('/', async (req, res, next) => {
     try {
-        const events = await eventService.getAllEvents();
+        const { eventName, venueLocation, eventType } = req.query;
+        const events = await eventService.getAllEvents(eventName, venueLocation, eventType);
 
         res.status(200).json(events);
     } catch (err) {
