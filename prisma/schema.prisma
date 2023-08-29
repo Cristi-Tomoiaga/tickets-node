@@ -1,0 +1,77 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+model Customer {
+  id     Int     @id(map: "PK__customer__CD65CB85FDE8332A") @default(autoincrement()) @map("customer_id")
+  name   String? @map("customer_name") @db.VarChar(100)
+  email  String? @unique(map: "uq_email") @db.VarChar(70)
+  orders Order[]
+
+  @@map("customer")
+}
+
+model Event {
+  id               Int              @id(map: "PK__event__2370F7276F7B9EED") @default(autoincrement()) @map("event_id")
+  venueId          Int?             @map("venue_id")
+  eventTypeId      Int?             @map("event_type_id")
+  description      String?          @map("event_description") @db.VarChar(200)
+  name             String?          @map("event_name") @db.VarChar(100)
+  startDate        DateTime?        @map("start_date") @db.DateTime
+  endDate          DateTime?        @map("end_date") @db.DateTime
+  imageUrl         String?          @map("image_url") @db.VarChar(2000)
+  availableSeats   Int?             @map("available_seats")
+  eventType        EventType?       @relation(fields: [eventTypeId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_event_event_type")
+  venue            Venue?           @relation(fields: [venueId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_event_venue")
+  ticketCategories TicketCategory[]
+
+  @@unique([name, startDate], map: "uq_event_name_start_date")
+  @@map("event")
+}
+
+model EventType {
+  id    Int     @id(map: "PK__event_ty__BB84C6F389567CC6") @default(autoincrement()) @map("event_type_id")
+  name  String? @unique(map: "uq_event_type_name") @map("event_type_name") @db.VarChar(100)
+  event Event[]
+
+  @@map("event_type")
+}
+
+model Order {
+  id               Int             @id(map: "PK__orders__465962295B15D1F2") @default(autoincrement()) @map("order_id")
+  ticketCategoryId Int?            @map("ticket_category_id")
+  customerId       Int?            @map("customer_id")
+  orderedAt        DateTime?       @map("ordered_at") @db.DateTime
+  numberOfTickets  Int?            @map("number_of_tickets")
+  totalPrice       Decimal?        @map("total_price") @db.Decimal(10, 2)
+  customer         Customer?       @relation(fields: [customerId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_orders_customer")
+  ticketCategory   TicketCategory? @relation(fields: [ticketCategoryId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_orders_ticket_category")
+
+  @@map("orders")
+}
+
+model TicketCategory {
+  id          Int      @id(map: "PK__ticket_c__3FC8DEA29C94F233") @default(autoincrement()) @map("ticket_category_id")
+  eventId     Int?     @map("event_id")
+  description String?  @db.VarChar(70)
+  price       Decimal? @db.Decimal(10, 2)
+  orders      Order[]
+  event       Event?   @relation(fields: [eventId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_ticket_category_event")
+
+  @@map("ticket_category")
+}
+
+model Venue {
+  id       Int     @id(map: "PK__venue__82A8BE8DBFE4F0A4") @default(autoincrement()) @map("venue_id")
+  location String? @db.VarChar(70)
+  type     String? @db.VarChar(100)
+  capacity Int?
+  events   Event[]
+
+  @@map("venue")
+}
