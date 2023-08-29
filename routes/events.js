@@ -8,7 +8,7 @@ router.get('/', async (req, res, next) => {
         const { eventName, venueLocation, eventType } = req.query;
         const events = await eventService.getAllEvents(eventName, venueLocation, eventType);
 
-        res.status(200).json(events);
+        return res.status(200).json(events);
     } catch (err) {
         next(err);
     }
@@ -18,7 +18,7 @@ router.get('/:id', async (req, res, next) => {
     try {
         const event = await eventService.getEventById(req.params.id);
 
-        res.status(200).json(event);
+        return res.status(200).json(event);
     } catch (err) {
         next(err);
     }

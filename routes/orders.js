@@ -7,7 +7,7 @@ router.get('/', async (req, res, next) => {
     try {
         const orders = await ordersService.getAllOwnedOrders();
 
-        res.status(200).json(orders);
+        return res.status(200).json(orders);
     } catch(err) {
         next(err);
     }
@@ -18,7 +18,7 @@ router.post('/', async (req, res, next) => {
         const { eventId, ticketCategoryId, numberOfTickets } = req.body;
         const order = await ordersService.createOrder(eventId, ticketCategoryId, numberOfTickets);
 
-        res.status(201).json(order);
+        return res.status(201).json(order);
     } catch (err) {
         next(err);
     }
@@ -29,7 +29,7 @@ router.patch('/:id', async (req, res, next) => {
         const { ticketCategoryId, numberOfTickets } = req.body;
         const order = await ordersService.updateOrder(req.params.id, ticketCategoryId, numberOfTickets);
 
-        res.status(200).json(order);
+        return res.status(200).json(order);
     } catch (err) {
         next(err);
     }
@@ -39,7 +39,7 @@ router.delete('/:id', async (req, res, next) => {
     try {
         await ordersService.deleteOrder(req.params.id);
 
-        res.status(204).end();
+        return res.status(204).end();
     } catch (err) {
         next(err);
     }

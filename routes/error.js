@@ -16,7 +16,7 @@ export default async (err, req, res, next) => {
         });
     }
 
-    res.status(500).json({
+    return res.status(500).json({
         errorMessage: "Internal Server Error.",
     });
 };
